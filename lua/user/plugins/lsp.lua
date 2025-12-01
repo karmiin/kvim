@@ -2,6 +2,8 @@ return {
   "neovim/nvim-lspconfig",
   event = { "BufReadPre", "BufNewFile" },
   dependencies = {
+    "williamboman/mason.nvim",
+    "williamboman/mason-lspconfig.nvim",
     "hrsh7th/cmp-nvim-lsp",
     "hrsh7th/cmp-buffer",
     "hrsh7th/cmp-path",
@@ -14,6 +16,7 @@ return {
   config = function()
     local cmp = require("cmp")
     local luasnip = require("luasnip")
+
     require("luasnip.loaders.from_vscode").lazy_load()
 
     cmp.setup({
@@ -29,6 +32,8 @@ return {
       mapping = cmp.mapping.preset.insert({
         ["<C-k>"] = cmp.mapping.select_prev_item(),
         ["<C-j>"] = cmp.mapping.select_next_item(),
+        ["<C-b>"] = cmp.mapping.scroll_docs(-4),
+        ["<C-f>"] = cmp.mapping.scroll_docs(4),
         ["<C-Space>"] = cmp.mapping.complete(),
         ["<CR>"] = cmp.mapping.confirm({ select = true }),
       }),
@@ -40,18 +45,40 @@ return {
       }),
     })
 
-   
     local capabilities = require("cmp_nvim_lsp").default_capabilities()
-     local lspconfig = require("lspconfig")
-  
-
-    -- Lista manuale dei server che sai di aver messo in Mason
-    local servers = { "lua_ls", "html", "cssls", "pyright", "bashls" }
-
-    for _, server in pairs(servers) do
-      lspconfig[server].setup({
-        capabilities = capabilities,
-      })
-    end
+    
+    require("mason").setup()
+    require("mason-lspconfig").setup({
+      ensure_installed = { 
+        "lua_ls", 
+        "html", 
+        "cssls", 
+        "pyright", 
+        "bashls",
+        "rust_analyzer", 
+      },
+      
+      handlers = {
+        function(server_name)
+          require("lspconfig")[server_name].setup({
+            capabilities = capabilities,
+          })
+        end,
+        
+        ["rust_analyzer"] = function() end, 
+        
+        -- Configurazione specifica Lua
+        ["lua_ls"] = function()
+           require("lspconfig").lua_ls.setup({
+              capabilities = capabilities,
+              settings = {
+                 Lua = {
+                    diagnostics = { globals = { "vim" } },
+                 },
+              },
+           })
+        end,
+      }
+    })
   end,
 }

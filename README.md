@@ -2,7 +2,7 @@
 
 A highly customized, aesthetic, and performance-oriented Neovim configuration built on **Arch Linux**.
 
-![Screenshot](screenshot.png)
+![Screenshot](./screenshot.png)
 
 ## Features
 

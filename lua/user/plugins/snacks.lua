@@ -20,7 +20,6 @@ return {
     dashboard = {
       enabled = true,
       
-      -- 1. IL LOGO (Lo lasciamo qui perché funziona)
       preset = {
         header = [[
    ▄█   ▄█▄  ▄█    █▄   ▄█    ▄▄▄▄███▄▄▄▄   
@@ -36,25 +35,20 @@ return {
       },
 
       sections = {
-        -- SEZIONE A: Stampa il Logo definito sopra
         { 
             section = "header",
             padding = 1, 
         },
         
-        -- SEZIONE B: Sottotitolo (AGGIUNTO QUI)
-        -- Usiamo 'align' e 'text' diretto così non si rompe
-        {
+       {
             align = "center",
             text = { "_by Karmin" },
-            hl = "String", -- Questo lo rende VERDE (o colore stringa del tema)
+            hl = "String", 
             padding = 1,
         },
         
-        -- SEZIONE C: I Tasti
         { section = "keys", gap = 1, padding = 1, indent = 2 },
-        
-        -- SEZIONE D: Footer
+
         {
             align = "center",
             text = { "It's not a bug, it's a feature." },
@@ -74,7 +68,6 @@ return {
     { "<leader>gl", function() Snacks.lazygit.log() end, desc = "Git Log" },
   },
   
-  -- Colora il Logo Principale di Viola (TokyoNight)
   init = function()
     vim.api.nvim_set_hl(0, "SnacksDashboardHeader", { fg = "#bd93f9", bold = true })
   end,
